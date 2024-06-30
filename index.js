@@ -6,6 +6,8 @@ const port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const { userRouter } = require("./routers/usersRouter");
+
 app.use((req, res, next) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -13,6 +15,8 @@ app.use((req, res, next) => {
     res.set('Content-Type', 'application/json');
     next();
 });
+
+app.use('/api/users', userRouter);
 
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
