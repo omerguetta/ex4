@@ -138,6 +138,41 @@ exports.preferencesController = {
             await connection.end();
         }
     },
+    async updatePreference(req,res){
+        const {username} = req.params;
+        const {start_date,end_date,vacation_destination,vacation_type,access_key} = req.body;
+        if (!start_date || !end_date || !vacation_destination || !vacation_type||!access_key) {
+            res.status(400).send('start_date, end_date, vacation_destination and vacation_type are required:');
+            return;
+        }
+        if (!(vacation_destinations.includes(vacation_destination))) {
+            res.status(400).send('vacation_destination is not valid:');
+            return;
+        }
+        if (!(vacation_types.includes(vacation_type))) {
+            res.status(400).send('vacation_type is not valid:');
+            return;
+        }
+        const startDate = new Date(start_date);
+        const endDate = new Date(end_date);
+        if (isNaN(startDate) || isNaN(endDate)) {
+            res.status(400).send('Invalid start_date or end_date.');
+            return;
+        }
+        const differenceInMilliseconds = endDate - startDate;
+        const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+        if (differenceInDays > 7) {
+            res.status(400).send('vacation cannot be longer than a week');
+            return;
+        }
+        const connection = await dbConnection.createConnection();
+        try {
+            const [result] = await connection.execute(
+                `SELECT id,access_key FROM tbl_50_users WHERE user_name = ?`,
+                [username]
+            );
+            if (result.length === 0) {
+                return res.status(404).json({ error: 'User not found' });
     }
 
 };
