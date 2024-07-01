@@ -5,5 +5,6 @@ const preferenceRouter = Router();
 
 preferenceRouter.get('/', preferencesController.getPreferences);
 preferenceRouter.get('/:username', preferencesController.getPreferenceByUserName);
+preferenceRouter.post('/:username', preferencesController.addPreference);
 
 module.exports = { preferenceRouter };
