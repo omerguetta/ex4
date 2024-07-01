@@ -18,6 +18,50 @@ exports.preferencesController = {
            await connection.end();
         }
     },
+    async getPreferencesResult(req,res){
+        const connection = await dbConnection.createConnection();
+        try {
+            const [rows] =await connection.execute(
+                'SELECT * FROM tbl_50_users'
+            );
+            if (rows.length !== 5) {
+                return res.status(404).json({ error: 'there is no enough users to check the preferences result' });
+            }
+            const [result] = await connection.execute(
+                `SELECT vacation_destination
+                FROM tbl_50_preferences
+                GROUP BY vacation_destination
+                ORDER BY COUNT(vacation_destination) DESC, MIN(preferences_id) ASC
+                LIMIT 1;`
+            );
+            let resultMessage = {};
+            resultMessage.most_popular_destination = result[0].vacation_destination;
+            const [result2] = await connection.execute(
+                `SELECT vacation_type
+                FROM tbl_50_preferences
+                GROUP BY vacation_type
+                ORDER BY COUNT(vacation_type) DESC, MIN(preferences_id) ASC
+                LIMIT 1;`
+            );
+            resultMessage.most_popular_vacation_type = result2[0].vacation_type;
+            const [result3] = await connection.execute(
+                `SELECT
+                MAX(start_date) AS vacation_start_date,
+                MIN(end_date) AS vacation_end_date
+                FROM tbl_50_preferences;`
+            );
+            if (result3[0].vacation_start_date > result3[0].vacation_end_date) {
+                return res.status(500).json({ error: 'There is no overlap between the dates' });
+            }
+            resultMessage.vacation_start_date = result3[0].vacation_start_date;
+            resultMessage.vacation_end_date = result3[0].vacation_end_date;
+            res.status(200).json(resultMessage);
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        } finally {
+            await connection.end();
+        }
+    },
     async getPreferenceByUserName(req,res){
         const connection = await dbConnection.createConnection();
         try {
