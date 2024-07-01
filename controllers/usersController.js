@@ -5,7 +5,7 @@ exports.usersController = {
     async register(req, res) {
         const {username,password} = req.body;
         if (!username || !password) {
-            res.status(400).send('username and password are required');
+            res.status(400).send('username and password are required:');
             return;
         }
         const connection = await dbConnection.createConnection();
