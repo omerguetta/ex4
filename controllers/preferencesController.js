@@ -1,3 +1,21 @@
+const { get } = require('http');
+const { dbConnection } = require('../db_connections');
+const TABLE_PREFIX = 'tbl_50_preferences';
+
+exports.preferencesController = {
+    async getPreferences(req,res){
+        const connection = await dbConnection.createConnection();
+        try {
+            const [result] = await connection.execute(
+                `SELECT * FROM ${TABLE_PREFIX}`
+            );
+            res.status(200).json(result);
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        } finally {
+           await connection.end();
+        }
+    },
     async getPreferenceByUserName(req,res){
         const connection = await dbConnection.createConnection();
         try {
@@ -19,3 +37,4 @@
         }
     }
 
+};
