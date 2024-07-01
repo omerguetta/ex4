@@ -23,7 +23,7 @@ exports.usersController = {
                 access_token: access_key
             });
         } catch (e) {
-            res.status(500).json({ error: 'Internal server error at register user =' });
+            res.status(500).json({ error: e.message });
         } finally {
             connection.end();
         }
