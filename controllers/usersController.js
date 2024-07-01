@@ -25,7 +25,7 @@ exports.usersController = {
         } catch (e) {
             res.status(500).json({ error: e.message });
         } finally {
-            connection.end();
+            await connection.end();
         }
 
     }
