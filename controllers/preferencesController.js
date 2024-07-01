@@ -173,6 +173,27 @@ exports.preferencesController = {
             );
             if (result.length === 0) {
                 return res.status(404).json({ error: 'User not found' });
+            }
+            if (result[0].access_key !== access_key){
+                return res.status(403).json({ error: 'Access key is not valid' });
+            }
+            const user_id = result[0].id;
+            const [updateResult] = await connection.execute(
+                `UPDATE ${TABLE_PREFIX} SET start_date = ?, end_date = ?, vacation_destination = ?, vacation_type = ? WHERE user_id = ?`,
+                [start_date, end_date, vacation_destination, vacation_type, user_id]
+            );
+            if (updateResult.affectedRows === 0) {
+                return res.status(500).json({ error: 'Internal server error at update preference' });
+            }
+            res.status(200).json({
+                message: 'Preference updated successfully'
+            });
+        }
+        catch (e) {
+        res.status(500).json({ error: e.message });
+        } finally {
+        await connection.end();
+        }
     }
 
 };
