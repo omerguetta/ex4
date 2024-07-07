@@ -10,6 +10,11 @@ exports.usersController = {
         }
         const connection = await dbConnection.createConnection();
         try {
+            const [checkingUser] = await connection.execute(`SELECT * FROM ${TABLE_PREFIX} WHERE user_name = ?`, [username]);
+            if (checkingUser.length > 0) {
+            res.status(400).json({ error: 'User already exists' });
+            return;
+            }
             const [users] = await connection.execute(`SELECT user_name FROM ${TABLE_PREFIX}`);
             if (users.length >= 5){
                 res.status(400).json({ error: 'Only 5 users required' });
