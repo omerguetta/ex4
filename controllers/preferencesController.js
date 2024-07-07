@@ -25,7 +25,7 @@ exports.preferencesController = {
                 'SELECT * FROM tbl_50_users'
             );
             if (rows.length !== 5) {
-                return res.status(404).json({ error: 'there is no enough users to check the preferences result' });
+                return res.status(404).json({ error: 'You need 5 users to check the preferences result' });
             }
             const [result] = await connection.execute(
                 `SELECT vacation_destination
