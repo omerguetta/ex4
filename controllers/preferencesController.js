@@ -122,6 +122,11 @@ exports.preferencesController = {
                 return res.status(403).json({ error: 'Access key is not valid' });
             }
             const user_id = result[0].id;
+            const [preferences] = await connection.execute(`SELECT * FROM ${TABLE_PREFIX} WHERE user_id = ?`, [user_id]);
+            if (preferences.length > 0) {
+                res.status(400).json({ error: 'User already has a preference' });
+                return;
+            }
             const [insertResult] = await connection.execute(
                 `INSERT INTO ${TABLE_PREFIX} (user_id, start_date, end_date, vacation_destination, vacation_type) VALUES (?, ?, ?, ?, ?)`,
                 [user_id, start_date, end_date, vacation_destination, vacation_type]
