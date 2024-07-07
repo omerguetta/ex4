@@ -103,7 +103,7 @@ exports.preferencesController = {
                 res.status(400).json({ error: 'User already has a preference' });
                 return;
             }
-            if (!start_date || !end_date || !vacation_destination || !vacation_type||!access_key) {
+            if (!start_date || !end_date || !vacation_destination || !vacation_type) {
                 res.status(400).send('start_date, end_date, vacation_destination and vacation_type are required:');
                 return;
             }
