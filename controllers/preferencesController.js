@@ -84,7 +84,7 @@ exports.preferencesController = {
     },
     async addPreference(req,res){
         const {username} = req.params;
-        const {start_date,end_date,vacation_destination,vacation_type} = req.body;
+        const {start_date,end_date,vacation_destination,vacation_type,access_key} = req.body;
         const connection = await dbConnection.createConnection();
         try {
             const [result] = await connection.execute(
@@ -103,7 +103,7 @@ exports.preferencesController = {
                 res.status(400).json({ error: 'User already has a preference' });
                 return;
             }
-            if (!start_date || !end_date || !vacation_destination || !vacation_type) {
+            if (!start_date || !end_date || !vacation_destination || !vacation_type||!access_key) {
                 res.status(400).send('start_date, end_date, vacation_destination and vacation_type are required:');
                 return;
             }
