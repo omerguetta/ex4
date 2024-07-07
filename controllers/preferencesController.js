@@ -84,7 +84,7 @@ exports.preferencesController = {
     },
     async addPreference(req,res){
         const {username} = req.params;
-        const {start_date,end_date,vacation_destination,vacation_type,access_key} = req.body;
+        const {start_date,end_date,vacation_destination,vacation_type} = req.body;
         const connection = await dbConnection.createConnection();
         try {
             const [result] = await connection.execute(
