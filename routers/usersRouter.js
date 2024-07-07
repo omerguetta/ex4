@@ -5,5 +5,4 @@ const userRouter = Router();
 
 userRouter.post('/register', usersController.register);
 
-
 module.exports = { userRouter };

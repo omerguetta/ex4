@@ -3,7 +3,6 @@ const { dbConnection } = require('../db_connections');
 const TABLE_PREFIX = 'tbl_50_preferences';
 const {vacation_destinations} = require('../data/vacation_destination.json');
 const {vacation_types} = require('../data/vacation_types.json');
-
 exports.preferencesController = {
     async getPreferences(req,res){
         const connection = await dbConnection.createConnection();
@@ -200,5 +199,4 @@ exports.preferencesController = {
         await connection.end();
         }
     }
-
 };

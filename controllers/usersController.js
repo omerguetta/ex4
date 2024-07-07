@@ -1,6 +1,5 @@
 const { dbConnection } = require('../db_connections');
 const TABLE_PREFIX = 'tbl_50_users';
-
 exports.usersController = {
     async register(req, res) {
         const {username,password} = req.body;
@@ -37,7 +36,5 @@ exports.usersController = {
         } finally {
             await connection.end();
         }
-
     }
-
 }
