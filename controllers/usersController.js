@@ -10,6 +10,11 @@ exports.usersController = {
         }
         const connection = await dbConnection.createConnection();
         try {
+            const [users] = await connection.execute(`SELECT user_name FROM ${TABLE_PREFIX}`);
+            if (users.length >= 5){
+                res.status(400).json({ error: 'Only 5 users required' });
+                return;
+            }
             const access_key = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             const [result] = await connection.execute(
                 `INSERT INTO ${TABLE_PREFIX} (user_name, password, access_key) VALUES (?, ?, ?)`,
@@ -17,11 +22,6 @@ exports.usersController = {
             );
             if (result.affectedRows === 0) {
                 return res.status(500).json({ error: 'Internal server error at register user' });
-            }
-            const [users] = await connection.execute(`SELECT user_name FROM ${TABLE_PREFIX}`);
-            if (users.length > 5){
-                res.status(400).json({ error: 'Only 5 users required' });
-                return;
             }
             res.status(201).json({
                 message: 'User registered successfully',
